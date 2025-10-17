@@ -391,8 +391,7 @@ class TCPSenderTestHarness {
         sender.send_empty_segment();
         collect_output();
         std::ostringstream ss;
-        ss << "Initialized with ("
-           << "retx-timeout=" << config.rt_timeout << ")";
+        ss << "Initialized with (" << "retx-timeout=" << config.rt_timeout << ")";
         steps_executed.emplace_back(ss.str());
     }
 
