@@ -5,13 +5,26 @@
 
 #include <cstdint>
 #include <string>
+#include <vector> 
+#include <set> 
+
 
 //! \brief A class that assembles a series of excerpts from a byte stream (possibly out of order,
 //! possibly overlapping) into an in-order byte stream.
 class StreamReassembler {
   private:
     // Your code here -- add private members as necessary.
-
+    struct block_node {
+        size_t begin = 0;
+        size_t length = 0;
+        std::string data = "";
+        bool operator<(const block_node t) const { return begin < t.begin; }
+    };
+    std::set<block_node> _blocks = {};
+    std::vector<char> _buffer = {};
+    size_t _unassembled_byte = 0;
+    size_t _head_index = 0;
+    bool _eof_flag = false;
     ByteStream _output;  //!< The reassembled in-order byte stream
     size_t _capacity;    //!< The maximum number of bytes
 
@@ -32,6 +45,8 @@ class StreamReassembler {
     //! \param index the index of the first byte in `data`
     //! \param eof whether or not this segment ends with the end of the stream
     void push_substring(const std::string &data, const uint64_t index, const bool eof);
+
+    long merge_block(block_node &elm1, const block_node &elm2);
 
     //! \name Access the reassembled byte stream
     //!@{
