@@ -75,18 +75,18 @@ bool TCPSender::ack_received(const WrappingInt32 ackno, const uint16_t window_si
     if (abs_seqno > _next_seqno) {
         return false;
     }
-    for (; !_outgoing_queue.empty();) {
+    while(!_outgoing_queue.empty()) {
         const auto &front = _outgoing_queue.front();
         const auto &segment = front.second;
         if (front.first + segment.length_in_sequence_space() <= abs_seqno) {
-        _flight_bytes -= segment.length_in_sequence_space();
-        _outgoing_queue.pop();
-        // 新的数据包被接受，清空超时时间
-        _timeout = _initial_retransmission_timeout;
-        _time_wait = 0;
+            _flight_bytes -= segment.length_in_sequence_space();
+            _outgoing_queue.pop();
+            // 新的数据包被接受，清空超时时间
+            _timeout = _initial_retransmission_timeout;
+            _time_wait = 0;
         } else {
         // 当前数据包未被确认, 那么之后的数据包不用检查
-        break;
+            break;
         }
     }
     _consecutive_retransmissions_count = 0;
