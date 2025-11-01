@@ -82,7 +82,7 @@ class TCPConnection {
     //! after both streams have finished (e.g. to ACK retransmissions from the peer)
     bool active() const;
     //!@}
-
+    void attach_with_ack_and_win();
     //! Construct a new connection from a configuration
     explicit TCPConnection(const TCPConfig &cfg) : _cfg{cfg} {}
 
